@@ -28,7 +28,7 @@ def stream_users():
     cursor.close()
     connection.close()
 
-def calculate_average():
+def stream_user_ages():
     """
     Generator that yields average age
     """
@@ -40,4 +40,4 @@ def calculate_average():
     print(f"Average age of users: {total_age / count}")
 
 if __name__ == "__main__":
-    calculate_average()
+    stream_user_ages()

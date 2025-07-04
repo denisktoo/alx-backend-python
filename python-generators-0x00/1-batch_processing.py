@@ -6,7 +6,6 @@ MYSQL_HOST = 'localhost'
 MYSQL_USER = 'kiprotich'
 MYSQL_PASSWORD = 'Deno00*#'
 DB_NAME = 'ALX_prodev'
-TABLE_NAME = 'user_data'
 
 def stream_users_in_batches(batch_size):
     """
@@ -20,7 +19,7 @@ def stream_users_in_batches(batch_size):
     )
     cursor = connection.cursor()
 
-    cursor.execute(f"SELECT * FROM {TABLE_NAME}")
+    cursor.execute(f"SELECT * FROM user_data")
 
     while True:
         batch = cursor.fetchmany(batch_size)
@@ -39,4 +38,4 @@ def batch_processing(batch_size):
     """
     for row in stream_users_in_batches(batch_size):
         if int(row[3] > 25):
-            yield row
+            return row
