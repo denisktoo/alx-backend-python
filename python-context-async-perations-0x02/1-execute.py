@@ -1,6 +1,9 @@
 import sqlite3
 
 class ExecuteQuery:
+    """
+    Takes a query as input and executes it, managing both connection and the query execution
+    """
     def __init__(self, db_name, query, params=None):
         self.db_name = db_name
         self.query = query
