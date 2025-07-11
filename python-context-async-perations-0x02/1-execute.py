@@ -28,7 +28,6 @@ class ExecuteQuery:
 if __name__ == "__main__":
     query = "SELECT * FROM users WHERE age > ?"
     params = (25,)
-
     with ExecuteQuery("users.db", query, params) as result:
         for row in result:
             print(row)
