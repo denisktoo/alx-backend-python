@@ -2,7 +2,7 @@ import sqlite3
 
 class DatabaseConnection:
     """
-    andle opening and closing database connections automatically
+    Handle opening and closing database connections automatically
     """
     def __init__(self, db_name):
         self.db_name = db_name

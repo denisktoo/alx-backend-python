@@ -3,7 +3,7 @@ import aiosqlite
 
 async def async_fetch_users():
     """
-    asynchronous functions that fetches all users
+    Asynchronous functions that fetches all users
     """
     query = "SELECT * FROM users"
     async with aiosqlite.connect("users.db") as db:
@@ -12,7 +12,8 @@ async def async_fetch_users():
             return rows
 
 async def async_fetch_older_users():
-    """                                          asynchronous functions that fetches all users older than 40
+    """
+    Asynchronous functions that fetches all users older than 40
     """
     query = "SELECT * FROM users WHERE age > ?"
     params = (40,)
