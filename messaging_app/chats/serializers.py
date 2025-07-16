@@ -9,11 +9,21 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class ConversationSerializer(serializers.HyperlinkedModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
+    participant_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Conversation
-        fields = ['url', 'conversation_id', 'participants', 'created_at']
+        fields = ['url', 'conversation_id', 'participants', 'participant_count',  'created_at']
+
+        def get_participant_count(self, obj):
+            return obj.participants.count()
 
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
+    message_body = serializers.CharField()
     class Meta:
         model = Message
         fields = ['url', 'message_id', 'conversation', 'sender', 'message_body', 'sent_at']
+        def validate_message_body(self, value):
+        if len(value.strip()) == 0:
+            raise serializers.ValidationError("Message body cannot be empty.")
+        return value
