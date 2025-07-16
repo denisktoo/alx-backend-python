@@ -6,7 +6,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ['url', 'user_id', 'username', 'email', 'phone_number', 'role', 'created_at']
 
-
 class ConversationSerializer(serializers.HyperlinkedModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     participant_count = serializers.SerializerMethodField()
@@ -20,10 +19,12 @@ class ConversationSerializer(serializers.HyperlinkedModelSerializer):
 
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
     message_body = serializers.CharField()
+
     class Meta:
         model = Message
         fields = ['url', 'message_id', 'conversation', 'sender', 'message_body', 'sent_at']
+
         def validate_message_body(self, value):
-        if len(value.strip()) == 0:
-            raise serializers.ValidationError("Message body cannot be empty.")
-        return value
+            if len(value.strip()) == 0:
+                raise serializers.ValidationError("Message body cannot be empty.")
+            return value
