@@ -87,16 +87,15 @@ class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
         ("google", ["repo1", "repo2"]),
     ])
-    @patch("utils.get_json")
+    @patch("client.get_json")
     def test_public_repos(self, org_name, expected_repos, mock_get_json):
         """
         Test that public_repos returns expected repo names,
         and mocks get_json and _public_repos_url properly.
         """
-        # Make get_json return a specific payload
+        # Mock get_json to return fake payload matching expected_repos
         mock_get_json.return_value = [
-            {"name": "repo1"},
-            {"name": "repo2"}
+            {"name": repo_name} for repo_name in expected_repos
         ]
 
         # Mock the _public_repos_url property
