@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import unittest
 from client import GithubOrgClient
 from parameterized import parameterized, parameterized_class
@@ -16,9 +17,15 @@ class TestGithubOrgClient(unittest.TestCase):
             'events_url': 'https://api.github.com/orgs/google/events',
             'hooks_url': 'https://api.github.com/orgs/google/hooks',
             'issues_url': 'https://api.github.com/orgs/google/issues',
-            'members_url': 'https://api.github.com/orgs/google/members{/member}',
-            'public_members_url': 'https://api.github.com/orgs/google/public_members{/member}',
-            'avatar_url': 'https://avatars.githubusercontent.com/u/1342004?v=4',
+            'members_url': (
+                'https://api.github.com/orgs/google/members{/member}'
+            ),
+            'public_members_url': (
+                'https://api.github.com/orgs/google/public_members{/member}'
+            ),
+            'avatar_url': (
+                'https://avatars.githubusercontent.com/u/1342004?v=4'
+            ),
             'description': 'Google ❤️ Open Source',
             'name': 'Google',
             'company': None,
@@ -41,7 +48,9 @@ class TestGithubOrgClient(unittest.TestCase):
         }),
         ("abc", {
             'message': 'Not Found',
-            'documentation_url': 'https://docs.github.com/rest/orgs/orgs#get-an-organization',
+            'documentation_url': (
+                'https://docs.github.com/rest/orgs/orgs#get-an-organization'
+            ),
             'status': '404'
         }),
     ])
@@ -68,8 +77,10 @@ class TestGithubOrgClient(unittest.TestCase):
             {"name": "repo2"}
         ]
 
-        with patch("client.GithubOrgClient._public_repos_url", new_callable=PropertyMock) as mock_url:
-            mock_url.return_value = f"https://api.github.com/orgs/{org_name}/repos"
+        public_repos_url = "client.GithubOrgClient._public_repos_url"
+        with patch(public_repos_url, new_callable=PropertyMock) as mock_url:
+            url = f"https://api.github.com/orgs/{org_name}/repos"
+            mock_url.return_value = url
 
             client = GithubOrgClient(org_name)
             result = client.public_repos()
@@ -83,8 +94,9 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "other_license"}}, "my_license", False)
     ])
     def test_has_license(self, repo, license_key, expected):
-        self.assertEqual(GithubOrgClient.has_license(repo, license_key), expected)
-
+        self.assertEqual(
+            GithubOrgClient.has_license(repo, license_key), expected
+        )
 
     @parameterized.expand([
         ("google", "https://api.github.com/orgs/google/repos")
@@ -137,3 +149,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Test that public_repos returns expected repo names"""
         client = GithubOrgClient("google")
         self.assertEqual(client.public_repos(), self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Test that public_repos returns repos with license apache-2.0"""
+        client = GithubOrgClient("google")
+        self.assertEqual(
+            client.public_repos(license="apache-2.0"), self.apache2_repos
+        )

@@ -29,20 +29,20 @@ class TestGetJson(unittest.TestCase):
     ])
     @patch('requests.get')
     def test_get_json(self, test_url, test_payload, mock_requests_get):
-         # create a mock response and configure it
-         mock_response = Mock()
-         mock_response.status_code = 200
-         mock_response.json.return_value = test_payload
+        # create a mock response and configure it
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = test_payload
 
-         # make requests.get return the mock response
-         mock_requests_get.return_value = mock_response
+        # make requests.get return the mock response
+        mock_requests_get.return_value = mock_response
 
-         # Call the function
-         result = get_json(test_url)
+        # Call the function
+        result = get_json(test_url)
 
-         # Assertions
-         mock_requests_get.assert_called_once_with(test_url)
-         self.assertEqual(result, test_payload)
+        # Assertions
+        mock_requests_get.assert_called_once_with(test_url)
+        self.assertEqual(result, test_payload)
 
 
 class TestMemoize(unittest.TestCase):
@@ -55,8 +55,10 @@ class TestMemoize(unittest.TestCase):
             @memoize
             def a_property(self):
                 return self.a_method()
-            
-        with patch.object(TestClass, 'a_method', return_value=42) as mock_a_method:
+
+        with patch.object(
+            TestClass, 'a_method', return_value=42
+        ) as mock_a_method:
             obj = TestClass()
 
             # Call a_property twice
