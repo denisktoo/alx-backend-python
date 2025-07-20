@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Unittests for utils module.
+"""
 import unittest
 from parameterized import parameterized
 from unittest.mock import patch, Mock

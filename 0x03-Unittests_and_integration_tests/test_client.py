@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Unittests for client module.
+"""
 import unittest
 from client import GithubOrgClient
 from parameterized import parameterized, parameterized_class
