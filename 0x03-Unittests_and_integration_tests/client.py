@@ -56,3 +56,11 @@ class GithubOrgClient:
         except KeyError:
             return False
         return has_license
+    
+c = GithubOrgClient("abc")                
+result_c = c.org
+print(result_c)
+
+d = GithubOrgClient("google")                
+result_d = d.org
+print(result_d)
