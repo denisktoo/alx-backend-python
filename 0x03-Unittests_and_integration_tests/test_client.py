@@ -87,7 +87,7 @@ class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
         ("google", ["repo1", "repo2"])
     ])
-    def test_public_repos(self, org_name, expected_repos, mock_get_json):
+    def test_public_repos(self, org_name, expected_repos):
         """
         Test that public_repos() returns list of repo names
         and calls get_json and _public_repos_url correctly.
