@@ -9,14 +9,23 @@ class UserSerializer(serializers.ModelSerializer):
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     participant_count = serializers.SerializerMethodField()
-    messages = serializers.PrimaryKeyRelatedField(many=True, read_only=True) #, source='messages'
+    participant_ids = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=User.objects.all(), write_only=True, source='participants'
+    )
+    messages_ids = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='messages')
 
     class Meta:
         model = Conversation
-        fields = ['conversation_id', 'participants', 'participant_count', 'messages', 'created_at']
+        fields = ['conversation_id', 'participants', 'participant_ids', 'participant_count', 'messages_ids', 'created_at']
 
     def get_participant_count(self, obj):
         return obj.participants.count()
+    
+    def create(self, validated_data):
+        participants = validated_data.pop('participants')
+        conversation = Conversation.objects.create(**validated_data)
+        conversation.participants.set(participants)
+        return conversation
 
 class MessageSerializer(serializers.ModelSerializer):
     message_body = serializers.CharField()
@@ -38,4 +47,6 @@ class MessageSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
             validated_data['sender'] = request.user
+        else:
+            raise serializers.ValidationError("Sender must be authenticated.")
         return super().create(validated_data)

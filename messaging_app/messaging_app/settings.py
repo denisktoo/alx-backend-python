@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'chats.User'
@@ -140,5 +141,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'chats.pagination.CustomMessagePagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ]
 }

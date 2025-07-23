@@ -3,8 +3,11 @@ from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsParticipantOrReadOnly
+from .permissions import IsParticipantOfConversation
 from .auth import JWTAuthentication
+from .filters import MessageFilter
+from .pagination import CustomMessagePagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -18,8 +21,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsParticipantOrReadOnly]
-
+    permission_classes = [IsParticipantOfConversation]
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['participants__first_name', 'participants__last_name']
@@ -35,5 +37,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    filter_backends = [filters.SearchFilter]
+    # filter_backends = [filters.SearchFilter]
     search_fields = ['message_body']
+    pagination_class = CustomMessagePagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MessageFilter
