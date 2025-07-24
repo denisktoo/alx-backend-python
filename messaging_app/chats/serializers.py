@@ -12,7 +12,9 @@ class ConversationSerializer(serializers.ModelSerializer):
     participant_ids = serializers.PrimaryKeyRelatedField(
         many=True, queryset=User.objects.all(), write_only=True, source='participants'
     )
-    messages_ids = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='messages')
+    messages_ids = serializers.PrimaryKeyRelatedField(
+        many=True, read_only=True, source='messages'
+    )
 
     class Meta:
         model = Conversation
@@ -45,7 +47,7 @@ class MessageSerializer(serializers.ModelSerializer):
         Attach the authenticated user as the sender.
         """
         request = self.context.get('request')
-        if request and hasattr(request, 'user'):
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
             validated_data['sender'] = request.user
         else:
             raise serializers.ValidationError("Sender must be authenticated.")
