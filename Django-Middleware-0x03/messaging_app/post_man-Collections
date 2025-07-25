@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "a0dfca0c-ea74-41a7-83f2-4fc9f86bd397",
+		"name": "Messaging App API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39570890"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"Too\",\r\n  \"email\": \"deniskiprotich746@gmail.com\",\r\n  \"first_name\": \"Denis\",\r\n  \"last_name\": \"Kiprotich\",\r\n  \"password\": \"Too*#\",\r\n  \"role\": \"guest\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/register/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"register",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"Too\",\r\n  \"password\": \"Too*#\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/token/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"token",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/users/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "conversations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNDU5MTMxLCJpYXQiOjE3NTM0NTU1MzEsImp0aSI6ImYzZjA2ZjE2M2U2OTQ1NTZiYWJjMDYzY2U2NTc0ZWJlIiwidXNlcl9pZCI6ImJiZjgwYzNiLTg0ZmMtNDUwMC1hZGRjLWVlMTY0MmM5ZDdlMCJ9.JA69nIPoAHv5hsLtryR7dmeeq6swpH46QgTa5feNNYE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"participant_ids\": [\"bbf80c3b-84fc-4500-addc-ee1642c9d7e0\", \"52aefaed-a863-4078-80bf-3ace4029edf2\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/conversations/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Messages",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNDU5MTc5LCJpYXQiOjE3NTM0NTU1NzksImp0aSI6IjI0NjQwYmNiYTBkZjQ5ZDU5MzI3MDM4MzEwNmNjYTY1IiwidXNlcl9pZCI6IjUyYWVmYWVkLWE4NjMtNDA3OC04MGJmLTNhY2U0MDI5ZWRmMiJ9.EuT48DilHIQynPQRHCr95SvJAZaec7d_HA2k-rAtDDQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"conversation\": \"206901b4-b389-4dd1-ad18-b16c24d1c929\",\r\n  \"message_body\": \"Hey Denis, How are you?\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/conversations/600a1a2b-0daa-43d1-a32d-4315a6aac4d7/messages/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						"600a1a2b-0daa-43d1-a32d-4315a6aac4d7",
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Conversation",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNDU5MTMxLCJpYXQiOjE3NTM0NTU1MzEsImp0aSI6ImYzZjA2ZjE2M2U2OTQ1NTZiYWJjMDYzY2U2NTc0ZWJlIiwidXNlcl9pZCI6ImJiZjgwYzNiLTg0ZmMtNDUwMC1hZGRjLWVlMTY0MmM5ZDdlMCJ9.JA69nIPoAHv5hsLtryR7dmeeq6swpH46QgTa5feNNYE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/conversations/?Authorization=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNDU5MTc5LCJpYXQiOjE3NTM0NTU1NzksImp0aSI6IjI0NjQwYmNiYTBkZjQ5ZDU5MzI3MDM4MzEwNmNjYTY1IiwidXNlcl9pZCI6IjUyYWVmYWVkLWE4NjMtNDA3OC04MGJmLTNhY2U0MDI5ZWRmMiJ9.EuT48DilHIQynPQRHCr95SvJAZaec7d_HA2k-rAtDDQ",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						""
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNDU5MTc5LCJpYXQiOjE3NTM0NTU1NzksImp0aSI6IjI0NjQwYmNiYTBkZjQ5ZDU5MzI3MDM4MzEwNmNjYTY1IiwidXNlcl9pZCI6IjUyYWVmYWVkLWE4NjMtNDA3OC04MGJmLTNhY2U0MDI5ZWRmMiJ9.EuT48DilHIQynPQRHCr95SvJAZaec7d_HA2k-rAtDDQ"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
