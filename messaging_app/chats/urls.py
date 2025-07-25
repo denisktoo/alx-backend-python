@@ -17,17 +17,19 @@ Including another URLconf
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework_nested.routers import NestedDefaultRouter
-from .views import ConversationViewSet, MessageViewSet
+from .views import ConversationViewSet, MessageViewSet, RegisterView, UserViewSet
 
 # Root router
 router = routers.DefaultRouter()
 router.register(r'conversations', ConversationViewSet, basename='conversation')
+router.register(r'users', UserViewSet, basename='user')
 
 # Nested router of  messages under conversations
 nested_router = NestedDefaultRouter(router, r'conversations', lookup='conversation')
 nested_router.register(r'messages', MessageViewSet, basename='conversation-messages')
 
 urlpatterns = [
+    path('register/', RegisterView.as_view(), name='register'),
     path('', include(router.urls)),
     path('', include(nested_router.urls)),
 ]

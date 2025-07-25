@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from .models import User, Conversation, Message
+from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'phone_number', 'role', 'created_at']
+        fields = ['user_id', 'username', 'first_name', 'last_name', 'email', 'phone_number', 'role', 'created_at']
 
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
@@ -52,3 +53,13 @@ class MessageSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("Sender must be authenticated.")
         return super().create(validated_data)
+
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['user_id', 'username', 'first_name', 'last_name', 'email', 'phone_number', 'password', 'role']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
