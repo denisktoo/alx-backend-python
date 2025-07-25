@@ -14,10 +14,6 @@ A RESTful messaging API built with Django and Django REST Framework. Features in
 ## 🚀 Getting Started
 
 ```bash
-git clone <repo-url>
-cd <project-directory>
-python -m venv env
-source env/bin/activate  # or env\Scripts\activate on Windows
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
@@ -63,5 +59,3 @@ Only conversation participants can view or send messages.
 * [DRF Permissions](https://www.django-rest-framework.org/api-guide/permissions/)
 
 ---
-
-```
