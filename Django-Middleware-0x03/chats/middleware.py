@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 from django.http import HttpResponseForbidden
 import os
 
@@ -33,9 +34,42 @@ class RestrictAccessByTimeMiddleware:
 class OffensiveLanguageMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
+        # Store timestamps of POSTs per IP
+        self.message_logs = {}
 
     def __call__(self, request):
-        ip = request.META.get('HTTP_X_FORWARDED_FOR')
+        # Get the client's IP address, accounting for proxy headers.
+        if request.method == 'POST':
+            ip_address = self.get_client_ip(request)
+            now = time.time()
+            
+            # Initialize list for new IP
+            if ip_address not in self.message_logs:
+                self.message_logs[ip_address] = []
+
+            # Keep only timestamps within the last 60 seconds
+            one_minute_ago = now - 60
+            self.message_logs[ip_address] = [
+                timestamp for timestamp in self.message_logs[ip_address]
+                if timestamp > one_minute_ago
+            ]
+
+            # Check if limit exceeded
+            if len(self.message_logs[ip_address]) >= 5:
+                return HttpResponseForbidden("Too many messages sent. Try again later.")
+
+            # Log current message timestamp
+            self.message_logs[ip_address].append(now)
+
+        # Continue processing request
+        return self.get_response(request)
+
+    def get_client_ip(self, request):
+        """Get the client's IP address, accounting for proxy headers."""
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            return x_forwarded_for.split(',')[0].strip()
+        return request.META.get('REMOTE_ADDR')
 
 class RolepermissionMiddleware:
     def __init__(self, get_response):
