@@ -36,3 +36,20 @@ class OffensiveLanguageMiddleware:
 
     def __call__(self, request):
         ip = request.META.get('HTTP_X_FORWARDED_FOR')
+
+class RolepermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        user = request.user
+
+        # Check if user is authenticated and has a valid role
+        if user.is_authenticated:
+            # Only allow 'admin' or 'host' roles
+            if getattr(user, 'role', None) not in ['admin', 'host']:
+                return HttpResponseForbidden("Access denied: Admins or Hosts only")
+        else:
+            return HttpResponseForbidden("Access denied: Login required")
+
+        return self.get_response(request)
