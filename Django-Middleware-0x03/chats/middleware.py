@@ -76,6 +76,10 @@ class RolepermissionMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        # Allow unauthenticated access to token and registration endpoints
+        if request.path in ['/api/token/', '/api/register/']:
+            return self.get_response(request)
+        
         user = request.user
 
         # Check if user is authenticated and has a valid role
