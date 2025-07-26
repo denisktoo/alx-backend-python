@@ -1,12 +1,14 @@
 from datetime import datetime
 from django.http import HttpResponseForbidden
+import os
 
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
+        self.log_path = os.path.join(os.path.dirname(__file__), "requests.log")
 
     def __call__(self, request):
-        with open("requests.log", "a") as log_file:
+        with open(self.log_path, "a") as log_file:
             user = request.user
             log_file.write(f"{datetime.now()} - User: {user} - Path: {request.path}")
 
