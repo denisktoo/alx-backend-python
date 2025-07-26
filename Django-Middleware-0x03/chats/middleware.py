@@ -29,3 +29,10 @@ class RestrictAccessByTimeMiddleware:
             return HttpResponseForbidden("Access denied: only allowed between 6PM and 9PM.")
 
         return self.get_response(request)
+    
+class OffensiveLanguageMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        ip = request.META.get('HTTP_X_FORWARDED_FOR')
