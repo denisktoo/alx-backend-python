@@ -15,7 +15,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     """
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     filter_backends = [filters.SearchFilter]
     search_fields = ['participants__first_name', 'participants__last_name']
 
@@ -28,7 +28,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     serializer_class = MessageSerializer
     pagination_class = CustomMessagePagination
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     filter_backends = [DjangoFilterBackend]
     filterset_class = MessageFilter
 

@@ -45,7 +45,7 @@ class Message(models.Model):
 
 class Notification(models.Model):
     notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
-    Message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='message')
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='notifications')
     receiver = models.ForeignKey('User', on_delete=models.CASCADE, related_name='received_notifications')
     notification = models.CharField(max_length=128)
 
