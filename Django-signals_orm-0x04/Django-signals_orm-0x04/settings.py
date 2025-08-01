@@ -59,10 +59,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'messaging.middleware.RequestLoggingMiddleware',
-    'messaging.middleware.RestrictAccessByTimeMiddleware',
-    'messaging.middleware.OffensiveLanguageMiddleware',
-    'messaging.middleware.RolepermissionMiddleware',
+    # 'messaging.middleware.RequestLoggingMiddleware',
+    # 'messaging.middleware.RestrictAccessByTimeMiddleware',
+    # 'messaging.middleware.OffensiveLanguageMiddleware',
+    # 'messaging.middleware.RolepermissionMiddleware',
+    'messaging.middleware.DebugMiddleware',
 ]
 
 ROOT_URLCONF = 'Django-signals_orm-0x04.urls'
@@ -157,6 +158,7 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
 }
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),

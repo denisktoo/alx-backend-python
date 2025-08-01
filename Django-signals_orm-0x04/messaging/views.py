@@ -1,7 +1,6 @@
 from rest_framework import viewsets, status, filters, generics
 from .models import Conversation, Message, User, Notification
 from .serializers import ConversationSerializer, MessageSerializer, RegisterSerializer, UserSerializer, NotificationSerializer
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import IsParticipantOfConversation
 from .filters import MessageFilter
@@ -16,7 +15,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     """
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+    permission_classes = [AllowAny]
     filter_backends = [filters.SearchFilter]
     search_fields = ['participants__first_name', 'participants__last_name']
 
@@ -29,7 +28,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     serializer_class = MessageSerializer
     pagination_class = CustomMessagePagination
-    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+    permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend]
     filterset_class = MessageFilter
 
