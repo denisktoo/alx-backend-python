@@ -41,7 +41,9 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation_id = self.kwargs.get('conversation_pk') or self.request.query_params.get('conversation_id')
         # messages = Message.objects.filter(conversation=conversation_id)
         messages = Message.objects.filter(conversation=conversation_id, sender=self.request.user).select_related('sender', 'receiver').prefetch_related(
-            Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver'))
+            Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver').only(
+            'message_id', 'content', 'timestamp', 'sender__user_id', 'receiver__user_id'
+        ))
         )
 
         if not messages.first() or self.request.user not in messages.first().conversation.participants.all():
