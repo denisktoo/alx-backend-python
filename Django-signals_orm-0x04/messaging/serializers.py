@@ -38,7 +38,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['message_id', 'conversation', 'sender', 'receiver', 'content', 'timestamp', 'edited', 'parent_message', 'replies', 'read']
+        fields = ['message_id', 'conversation', 'sender', 'receiver', 'content', 'timestamp', 'edited_by', 'parent_message', 'replies', 'read']
 
     def get_replies(self, obj):
         replies = obj.replies.select_related('sender', 'receiver').all()

@@ -44,7 +44,7 @@ class Message(models.Model):
     receiver = models.ForeignKey('User', on_delete=models.CASCADE, related_name='received_messages')
     content = models.TextField(null=False)
     timestamp = models.DateTimeField(auto_now_add=True)
-    edited = models.BooleanField(default=False)
+    edited_by = models.BooleanField(default=False)
     parent_message = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
     read = models.BooleanField(default=False)
 
