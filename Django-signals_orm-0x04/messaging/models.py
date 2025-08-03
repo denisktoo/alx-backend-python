@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Prefetch
 from django.contrib.auth.models import AbstractUser
 import uuid
 
@@ -32,22 +33,63 @@ class Conversation(models.Model):
     def __str__(self):
         return f"Conversation {self.conversation_id}"
 
+class UnreadMessagesManager(models.Manager):
+    def for_user(self, user):
+        return self.get_queryset().filter(receiver=user, read=False).only('message_id', 'content', 'timestamp')
+
 class Message(models.Model):
-    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
+    message_id = models.AutoField(primary_key=True)
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey('User', on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ForeignKey('User', on_delete=models.CASCADE, related_name='received_messages')
-    message_body = models.TextField(null=False)
-    sent_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(null=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    edited = models.BooleanField(default=False)
+    parent_message = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Message {self.message_id} by {self.sender.email}"
+    
+    # Managers
+    objects = models.Manager()
+    unread = UnreadMessagesManager()
+
+    def mark_as_read(self):
+        self.read = True
+        self.save(update_fields=['read'])
+    
+    def get_all_replies(self):
+        replies = []
+
+        def fetch_replies(msg):
+            children = Message.objects.filter(parent_message=msg).select_related('sender', 'receiver')
+            for child in children:
+                replies.append(child)
+                fetch_replies(child)
+
+        fetch_replies(self)
+        return replies
+
+# Example usage with optimization:
+Message.objects.select_related('sender', 'receiver').prefetch_related(
+    Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver'))
+)
 
 class Notification(models.Model):
-    notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
+    notification_id = models.AutoField(primary_key=True)
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='notifications')
     receiver = models.ForeignKey('User', on_delete=models.CASCADE, related_name='received_notifications')
     notification = models.CharField(max_length=128)
 
     def __str__(self):
         return f"Notification for {self.receiver.first_name}: {self.notification}"
+
+class MessageHistory(models.Model):
+    messageHistory_id = models.AutoField(primary_key=True)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
+    old_body = models.TextField()
+    edited_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"History for: {self.message.message_id} at {self.edited_at}"

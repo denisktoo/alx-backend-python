@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Conversation, Message, Notification
+from .models import User, Conversation, Message, Notification, MessageHistory
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,15 +31,20 @@ class ConversationSerializer(serializers.ModelSerializer):
         return conversation
 
 class MessageSerializer(serializers.ModelSerializer):
-    message_body = serializers.CharField()
+    content = serializers.CharField()
     sender = UserSerializer(read_only=True)
     receiver = UserSerializer(read_only=True)
+    replies = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
-        fields = ['message_id', 'conversation', 'sender', 'receiver', 'message_body', 'sent_at']
+        fields = ['message_id', 'conversation', 'sender', 'receiver', 'content', 'timestamp', 'edited', 'parent_message', 'replies', 'read']
 
-    def validate_message_body(self, value):
+    def get_replies(self, obj):
+        replies = obj.replies.select_related('sender', 'receiver').all()
+        return MessageSerializer(replies, many=True, context=self.context).data
+
+    def validate_content(self, value):
         if len(value.strip()) == 0:
             raise serializers.ValidationError("Message body cannot be empty.")
         return value
@@ -72,3 +77,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+    
+class MessageHistorySerializer(serializers.ModelSerializer):
+    message = MessageSerializer(read_only=True)
+
+    class Meta:
+        model = MessageHistory
+        fields = ['message_id', 'message', 'old_body', 'edited_at']
