@@ -58,14 +58,13 @@ class MessageViewSet(viewsets.ModelViewSet):
             raise PermissionDenied("You are not allowed to send messages to this conversation.")
         serializer.save(sender=self.request.user)
 
-class UnreadMessageViewSet(viewsets.GenericViewSet):
+class UnreadMessageViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
+    serializer_class = MessageSerializer
 
-    def list(self, request, conversation_pk=None):
-        unread_messages = Message.unread.unread_for_user(request.user).filter(conversation_id=conversation_pk)
-        serializer = MessageSerializer(unread_messages, many=True)
-        return Response(serializer.data)
-
+    def get_queryset(self):
+        conversation_id = self.kwargs.get('conversation_pk')
+        return Message.unread.for_user(self.request.user).filter(conversation_id=conversation_id)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()

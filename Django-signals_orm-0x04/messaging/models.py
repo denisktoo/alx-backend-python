@@ -43,7 +43,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited_by = models.BooleanField(default=False)
     parent_message = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
-    read = models.BooleanField(default=False)
+    read_by = models.ManyToManyField('User', related_name='read_messages', blank=True)
 
     def __str__(self):
         return f"Message {self.message_id} by {self.sender.email}"
@@ -52,10 +52,9 @@ class Message(models.Model):
     objects = models.Manager()
     unread = UnreadMessagesManager()
 
-    def mark_as_read(self):
-        self.read = True
-        self.save(update_fields=['read'])
-    
+    def mark_as_read(self, user):
+        self.read_by.add(user)
+
     def get_all_replies(self):
         replies = []
 
@@ -67,10 +66,6 @@ class Message(models.Model):
 
         fetch_replies(self)
         return replies
-
-Message.objects.select_related('sender', 'receiver').prefetch_related(
-    Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver'))
-)
 
 class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)

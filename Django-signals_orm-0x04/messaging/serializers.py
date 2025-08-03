@@ -35,10 +35,11 @@ class MessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
     receiver = UserSerializer(read_only=True)
     replies = serializers.SerializerMethodField()
+    read_by = UserSerializer(many=True, read_only=True)
 
     class Meta:
         model = Message
-        fields = ['message_id', 'conversation', 'sender', 'receiver', 'content', 'timestamp', 'edited_by', 'parent_message', 'replies', 'read']
+        fields = ['message_id', 'conversation', 'sender', 'receiver', 'content', 'timestamp', 'edited_by', 'parent_message', 'replies', 'read_by']
 
     def get_replies(self, obj):
         replies = obj.replies.select_related('sender', 'receiver').all()
