@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Prefetch
 from django.contrib.auth.models import AbstractUser
 import uuid
+from .managers import UnreadMessagesManager
 
 class User(AbstractUser):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
@@ -32,10 +33,6 @@ class Conversation(models.Model):
 
     def __str__(self):
         return f"Conversation {self.conversation_id}"
-
-class UnreadMessagesManager(models.Manager):
-    def for_user(self, user):
-        return self.get_queryset().filter(receiver=user, read=False).only('message_id', 'content', 'timestamp')
 
 class Message(models.Model):
     message_id = models.AutoField(primary_key=True)
