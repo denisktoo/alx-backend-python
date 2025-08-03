@@ -68,7 +68,6 @@ class Message(models.Model):
         fetch_replies(self)
         return replies
 
-# Example usage with optimization:
 Message.objects.select_related('sender', 'receiver').prefetch_related(
     Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver'))
 )

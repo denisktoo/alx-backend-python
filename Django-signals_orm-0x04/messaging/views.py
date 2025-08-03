@@ -40,7 +40,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         conversation_id = self.kwargs.get('conversation_pk') or self.request.query_params.get('conversation_id')
         # messages = Message.objects.filter(conversation=conversation_id)
-        messages = Message.objects.filter(conversation=conversation_id, sender=self.request.user).select_related('sender', 'receiver').prefetch_related(
+        request = self.request
+        messages = Message.objects.filter(conversation=conversation_id, sender=request.user).select_related('sender', 'receiver').prefetch_related(
             Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver').only(
             'message_id', 'content', 'timestamp', 'sender__user_id', 'receiver__user_id'
         ))
