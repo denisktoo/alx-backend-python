@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set working directory in container
-WORKDIR /app
+WORKDIR /chats
 
 # Install system dependencies for mysqlclient
 RUN apt-get update \
@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "-p", "0.0.0.0:8000"]
