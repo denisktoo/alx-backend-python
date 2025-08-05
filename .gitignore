@@ -1,2 +1,8 @@
 __pycache__/
 env/
+.env
+
+# Docker files
+*.pid
+*.db
+db_data/
