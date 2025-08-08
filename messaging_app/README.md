@@ -151,7 +151,7 @@ Containerizes a Django-based messaging application using Docker and Docker Compo
 * Build & run container:
 
 ```bash
-docker build -t messaging-app ./messaging_app
+docker build -t messaging-app .
 docker run -p 8000:8000 messaging-app
 ```
 
