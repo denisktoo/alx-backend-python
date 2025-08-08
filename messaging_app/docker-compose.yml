@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/app
+      - .:/chats
     ports:
       - "8000:8000"
     env_file:
