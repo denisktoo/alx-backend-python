@@ -16,5 +16,5 @@ COPY . .
 # Expose port
 EXPOSE 8000
 
-# Run the server
+# Run the server on port 8000 (equivalent to -p 8000:8000)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
