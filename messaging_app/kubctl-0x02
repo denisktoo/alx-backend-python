@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+kubectl apply -f blue_deployment.yaml
+kubectl apply -f green_deployment.yaml
+kubectl apply -f kubeservice.yaml
+
+kubectl logs -l app=messaging-app-green

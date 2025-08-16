@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "🚀 Starting Minikube..."
+minikube start
+
+echo "🔧 Using Minikube Docker daemon..."
+eval $(minikube docker-env)
+
+echo "ℹ️ Verifying cluster..."
+kubectl cluster-info
+
+echo "📦 Listing all pods..."
+kubectl get pods -A

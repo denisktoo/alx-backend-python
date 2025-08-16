@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+kubectl apply -f messaging_app/blue_deployment.yaml
+kubectl rollout status deployment/messaging-app-blue
+
+for i in {1..20}; do
+  curl -s http://messaging-app.local/api || echo "Request failed"
+  sleep 2
+done
+
+kubectl get pods -l app=messaging-app-blue
