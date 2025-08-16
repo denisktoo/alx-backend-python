@@ -209,3 +209,110 @@ Stop and remove all containers, networks, and volumes:
 ```bash
 docker-compose down -v
 ```
+---
+
+# **Kubernetes Deployment**
+
+### **Task 0 – Install Kubernetes & Set Up Local Cluster**
+
+**Description:** Start a Minikube cluster and verify it is running.
+
+**File:** messaging_app/messaging_app/kurbeScript
+
+**Commands:**
+
+```bash
+chmod +x messaging_app/messaging_app/kurbeScript
+./messaging_app/messaging_app/kurbeScript
+```
+
+---
+
+### **Task 1 – Deploy Django Messaging App on Kubernetes**
+
+**Description:** Create a Deployment and ClusterIP Service for the Django app.
+
+**File:** messaging_app/messaging_app/deployment.yaml
+
+**Commands:**
+
+```bash
+kubectl apply -f messaging_app/messaging_app/deployment.yaml
+kubectl get pods -l app=messaging-app
+kubectl logs <pod-name>
+```
+
+---
+
+### **Task 2 – Scale the Django App**
+
+**Description:** Increase the number of replicas for the Django Deployment to handle more traffic.
+
+**File:** messaging_app/messaging_app/kubctl-0x01
+
+**Commands:**
+
+```bash
+chmod +x messaging_app/messaging_app/kubctl-0x01
+./messaging_app/messaging_app/kubctl-0x01
+kubectl get pods -l app=messaging-app
+kubectl top pods
+```
+
+---
+
+### **Task 3 – Set Up Kubernetes Ingress**
+
+**Description:** Route external traffic to the Django service via an Ingress controller.
+
+**Files:**
+
+* messaging_app/messaging_app/ingress.yaml
+* messaging_app/commands.txt
+
+**Commands:**
+
+```bash
+# Enable ingress and apply config
+bash messaging_app/commands.txt
+```
+
+---
+
+### **Task 4 – Blue–Green Deployment Strategy**
+
+**Description:** Deploy two versions of the app (blue and green) and switch traffic gradually to achieve zero downtime.
+
+**Files:**
+
+* messaging_app/blue_deployment.yaml
+* messaging_app/kubeservice.yaml
+* messaging_app/kubctl-0x02
+* messaging_app/messaging_app/green_deployment.yaml
+
+**Commands:**
+
+```bash
+chmod +x messaging_app/kubctl-0x02
+./messaging_app/kubctl-0x02
+kubectl get pods
+```
+
+---
+
+### **Task 5 – Rolling Update**
+
+**Description:** Update the Django app gradually without downtime by updating the Docker image in the blue deployment.
+
+**Files:**
+
+* messaging_app/messaging_app/blue_deployment.yaml
+* messaging_app/kubctl-0x03
+
+**Commands:**
+
+```bash
+chmod +x messaging_app/kubctl-0x03
+./messaging_app/kubctl-0x03
+kubectl get pods -l app=messaging-app-blue
+```
