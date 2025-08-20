@@ -3,9 +3,20 @@ set -euo pipefail
 
 DEPLOYMENT="messaging-app"
 
+echo "🚀 Enabling metrics-server..."
+minikube addons enable metrics-server
+
+echo "📈 Scaling deployment to 3 replicas..."
 kubectl scale deployment "$DEPLOYMENT" --replicas=3
-kubectl get pods -l app=messaging-app
+
+echo "🟢 Verifying pods..."
+kubectl get pods -l app=$DEPLOYMENT
+
+echo "📊 Checking resource usage..."
 kubectl top pods
 
 # Optional load test
-# wrk -t2 -c50 -d30s http://<minikube-ip>:<nodeport>/
+MINIKUBE_IP=$(minikube ip)
+NODEPORT=$(kubectl get svc messaging-app-service -o jsonpath='{.spec.ports[0].nodePort}')
+echo "⚡ Running load test with wrk..."
+wrk -t2 -c50 -d30s http://$MINIKUBE_IP:$NODEPORT/

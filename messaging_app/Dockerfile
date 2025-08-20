@@ -1,20 +1,23 @@
-FROM python:3.10
+FROM python:3.10-slim
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Set working directory in container
 WORKDIR /chats
 
-# Copy requirements and install dependencies
+# Install system dependencies needed for mysqlclient
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    default-libmysqlclient-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
+
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the codebase
 COPY . .
 
-# Expose port
 EXPOSE 8000
 
-# Run the server on port 8000 (equivalent to -p 8000:8000)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

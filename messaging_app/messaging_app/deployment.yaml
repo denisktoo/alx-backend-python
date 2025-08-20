@@ -15,8 +15,14 @@ spec:
       containers:
         - name: messaging-app
           image: messaging-app:1.0
+          imagePullPolicy: Never
           ports:
             - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: messaging-app-config
+            - secretRef:
+                name: messaging-app-secret
 ---
 apiVersion: v1
 kind: Service

@@ -5,10 +5,7 @@ echo "🚀 Starting Minikube..."
 minikube start
 
 echo "🔧 Using Minikube Docker daemon..."
-eval $(minikube docker-env)
-
-echo "📦 Building Docker image inside Minikube..."
-docker build -t messaging-app:1.0 .
+eval $(minikube -p minikube docker-env)
 
 echo "ℹ️ Verifying cluster..."
 kubectl cluster-info

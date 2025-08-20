@@ -1,5 +1,4 @@
-version: '3.8'
-
+# No version field needed for modern Docker Compose
 services:
   db:
     image: mysql:8.0
