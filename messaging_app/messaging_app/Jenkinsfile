@@ -1,0 +1,36 @@
+pipeline {
+    agent {
+        docker {
+            docker = 
+        }
+    }
+
+    environment {
+        VENV_DIR = "env"
+    }
+
+    stages {
+        stage('Checkout') {
+            git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/denisktoo/alx-backend-python.git'
+        }
+
+        stage('Setup Python Environment') {
+            steps {
+                sh 'python -m venv $VENV_DIR'
+                sh '. $VENV_DIR/bin/activate && pip install --upgrade pip'
+                sh '. $VENV_DIR/bin/activate && pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '. $VENV_DIR/bin/activate && pytest --junitxml=report.xml'
+            }
+            post {
+                always {
+                    junit 'report.xml'
+                }
+            }
+        }
+    }
+}
