@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         VENV_DIR = "env"
-        IMAGE_NAME = "messaging-app"
+        IMAGE_NAME = "kiprotich507/messaging-app"
         IMAGE_TAG  = "latest"
     }
 
