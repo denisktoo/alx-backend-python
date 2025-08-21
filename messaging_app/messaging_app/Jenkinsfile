@@ -22,7 +22,7 @@ pipeline {
         stage('Setup Python Environment') {
             steps {
                 sh 'python3 -m venv $VENV_DIR'
-                sh '. $VENV_DIR/bin/activate && pip3 install --upgrade pip3'
+                sh '. $VENV_DIR/bin/activate && pip3 install --upgrade pip'
                 sh '. $VENV_DIR/bin/activate && pip3 install -r messaging_app/requirements.txt'
             }
         }
