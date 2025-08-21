@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.10-slim'
-            args '-u root:root'  // ensures permission to write in workspace 
+            args '-v /var/run/docker.sock:/var/run/docker.sock -u root:root' // mount host Docker socket 
         }
     }
 
@@ -36,9 +36,21 @@ pipeline {
             }
         }
 
+        stage('Get Git Commit Hash') {
+            steps {
+                script {
+                    COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    env.IMAGE_TAG = "${COMMIT_HASH}"
+                    echo "Docker image tag will be: ${IMAGE_TAG}"
+                }
+            }
+        }
+
         stage('Build Docker Image') {
-            script {
-                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ./messaging_app"
+            steps {
+                script {
+                    sh "docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$IMAGE_TAG ./messaging_app"
+                }
             }
         }
 
@@ -51,6 +63,7 @@ pipeline {
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
                         sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                        sh "docker push $IMAGE_NAME:latest"
                         sh "docker push $IMAGE_NAME:$IMAGE_TAG"
                     }
                 }
