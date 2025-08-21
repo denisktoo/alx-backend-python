@@ -14,7 +14,9 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/denisktoo/alx-backend-python.git'
+            steps {
+                git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/denisktoo/alx-backend-python.git'
+            }
         }
 
         stage('Setup Python Environment') {
