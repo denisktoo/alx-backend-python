@@ -1,10 +1,11 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.10-slim'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -u root:root' // mount host Docker socket 
-        }
-    }
+    agent any
+    // agent {
+    //     docker {
+    //         image 'python:3.10-slim'
+    //         args '-v /var/run/docker.sock:/var/run/docker.sock -u root:root' // mount host Docker socket 
+    //     }
+    // }
 
     environment {
         VENV_DIR = "env"
