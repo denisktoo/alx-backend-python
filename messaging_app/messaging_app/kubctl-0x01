@@ -15,7 +15,7 @@ kubectl get pods -l app=$DEPLOYMENT
 echo "📊 Checking resource usage..."
 kubectl top pods
 
-# Optional load test
+# Load test
 MINIKUBE_IP=$(minikube ip)
 NODEPORT=$(kubectl get svc messaging-app-service -o jsonpath='{.spec.ports[0].nodePort}')
 echo "⚡ Running load test with wrk..."
